@@ -53,10 +53,9 @@
   cursor: pointer;
   color:grey;
 }
-.packages-Name-List:active,
-.packages-Name-List:focus,
-.packages-Name-List:visited{
-  color:grey;
+.packages-Name-List:active{
+  background-color: grey;
+  color: black;
 }
 
 .depend{

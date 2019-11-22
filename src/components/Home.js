@@ -1,12 +1,21 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { dataContext } from "../context/Context";
 
 export default function Home() {
   const { nameList, packageData } = useContext(dataContext);
   const [displayPackage, setDisplayPackage] = useState();
   const [filter, setfilter] = useState();
+  const itemRef = useRef();
 
-  console.log(packageData);
+  useEffect(() => {
+    // scrool to the current packages
+    if (itemRef.current) {
+      itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  },[displayPackage]);
+
+
+  console.log(itemRef);
 
   function splitDepend(depends) {
     if (depends) {
@@ -22,6 +31,7 @@ export default function Home() {
     return data.map((item, index) => {
       if (nameList.includes(item[0])) {
         // 1 package
+        //data [libacl1,(=,2.2.52-3build1)]
         if (item[1] !== "|") {
           return (
             <div
@@ -36,11 +46,14 @@ export default function Home() {
           );
         } else {
           // 2 packages
+          // data [ubuntu-mono,|,adwaita-icon-theme-full]
+          // case adwaita-icon-theme-full in list
           if (nameList.includes(item[2])) {
             // there are two packages (alternative) in the list
             return (
               <div className="flex">
                 <div
+                  key={index}
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[0]);
@@ -50,9 +63,10 @@ export default function Home() {
                 </div>
                 <div> &nbsp; {item[1]} &nbsp;</div>
                 <div
+                  key={index}
                   className="depend"
                   onClick={() => {
-                    setDisplayPackage(item[1]);
+                    setDisplayPackage(item[2]);
                   }}
                 >
                   {item[2]}
@@ -61,9 +75,11 @@ export default function Home() {
             );
           } else {
             // alternative not in the list
+            // case adwaita-icon-theme-full not in list
             return (
-              <div className="flex">
+              <div className="flex" key={index}>
                 <div
+                  key={index}
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[0]);
@@ -77,15 +93,13 @@ export default function Home() {
           }
         }
       } else {
-        return <div key={index}> {item[0]}</div>;
+        return <div key={item[0]}> {item[0]}</div>;
       }
     });
   }
 
   function showDetail(packages, name) {
     if (packages && name) {
-      console.log(packages[name]);
-
       return (
         <div className="packages__information">
           <h1>{name}</h1>
@@ -129,13 +143,14 @@ export default function Home() {
         ></input>
       </div>
       <div className="leftside">
-        <div className="packages__name">
+        <div className="packages__name" >
           <div className="packages__name__container">
             <h2>The Package Name</h2>
             {nameList.map((name, index) => {
               return (
                 <div
-                  key={index}
+                  ref={displayPackage === name ? itemRef : null}
+                  key={name}
                   className={
                     displayPackage === name
                       ? "packages-Name-List active"
