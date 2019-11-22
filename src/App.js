@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
-import Context from "./context/Context";
+import PackageDataProvider from "./hooks/PackageDataProvider";
 import Home from "./components/Home";
 
 function App() {
   return (
-    <Context>
-      <Home></Home>
-    </Context>
+    <PackageDataProvider>
+      <Home />
+    </PackageDataProvider>
   );
 }
 
