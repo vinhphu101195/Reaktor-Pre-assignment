@@ -1,18 +1,23 @@
-import React, { useContext,useState,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { dataContext } from "../context/Context";
-import List from "./List";
 
 export default function Home() {
-  const { nameList, getDetailFunction, packageDetail,Onfilter } = useContext(
-    dataContext
-  );
-  const [filter,setfilter] = useState();
-  useEffect(()=>{
-    Onfilter(filter);
-  },[filter]);
-  
-  console.log(packageDetail);
-  
+  const { nameList, packageData } = useContext(dataContext);
+  const [displayPackage, setDisplayPackage] = useState();
+  const [filter, setfilter] = useState();
+
+  console.log(packageData);
+
+  function splitDepend(depends) {
+    if (depends) {
+      const depend = depends.split(", ").map(element => {
+        return element.split(" ");
+      });
+      return depend;
+    }
+    return [];
+  }
+
   function showDepends(data) {
     return data.map((item, index) => {
       if (nameList.includes(item[0])) {
@@ -23,7 +28,7 @@ export default function Home() {
               key={index}
               className="depend"
               onClick={() => {
-                getDetailFunction(item[0]);
+                setDisplayPackage(item[0]);
               }}
             >
               {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
@@ -38,7 +43,7 @@ export default function Home() {
                 <div
                   className="depend"
                   onClick={() => {
-                    getDetailFunction(item[0]);
+                    setDisplayPackage(item[0]);
                   }}
                 >
                   {item[0]}
@@ -47,7 +52,7 @@ export default function Home() {
                 <div
                   className="depend"
                   onClick={() => {
-                    getDetailFunction(item[1]);
+                    setDisplayPackage(item[1]);
                   }}
                 >
                   {item[2]}
@@ -61,7 +66,7 @@ export default function Home() {
                 <div
                   className="depend"
                   onClick={() => {
-                    getDetailFunction(item[0]);
+                    setDisplayPackage(item[0]);
                   }}
                 >
                   {item[0]}
@@ -77,6 +82,40 @@ export default function Home() {
     });
   }
 
+  function showDetail(packages, name) {
+    if (packages && name) {
+      console.log(packages[name]);
+
+      return (
+        <div className="packages__information">
+          <h1>{name}</h1>
+          <div>Status: {packages[name].Status}</div>
+          <div>
+            Priority:{" "}
+            {packages[name].Priority ? packages[name].Priority : "n/a"}
+          </div>
+          <div>
+            Architecture:{" "}
+            {packages[name].Architecture ? packages[name].Architecture : "n/a"}
+          </div>
+          <div>
+            Source: {packages[name].Source ? packages[name].Source : "n/a"}
+          </div>
+
+          <div>
+            Depends:{" "}
+            {packages[name].Depends
+              ? showDepends(splitDepend(packages[name].Depends))
+              : "n/a"}
+          </div>
+          <div className="description">
+            Description: {packages[name].Description}
+          </div>
+        </div>
+      );
+    }
+  }
+
   return (
     <div className="container">
       <div className="navbar">
@@ -84,37 +123,35 @@ export default function Home() {
           className="navbar__input"
           type="text"
           placeholder="input name of package"
-          onChange={e =>{ setfilter(e.target.value)}}
+          onChange={e => {
+            setfilter(e.target.value);
+          }}
         ></input>
       </div>
-      <List></List>
-
-
-      {/* check ton tai package hay ko */}
-      <div className="rightside">
-        <div className="packages__information">
-          <h1>{packageDetail.name}</h1>
-          <div>Status: {packageDetail.status}</div>
-          <div>
-            Priority: {packageDetail.priority ? packageDetail.priority : "n/a"}
-          </div>
-          <div>
-            Architecture:{" "}
-            {packageDetail.architecture ? packageDetail.architecture : "n/a"}
-          </div>
-          <div>
-            Source: {packageDetail.source ? packageDetail.source : "n/a"}
-          </div>
-
-          <div>
-            Depends:{" "}
-            {packageDetail.depends ? showDepends(packageDetail.depends) : "n/a"}
-          </div>
-          <div className="description">
-            Description: {packageDetail.description}
+      <div className="leftside">
+        <div className="packages__name">
+          <div className="packages__name__container">
+            <h2>The Package Name</h2>
+            {nameList.map((name, index) => {
+              return (
+                <div
+                  key={index}
+                  className={
+                    displayPackage === name
+                      ? "packages-Name-List active"
+                      : "packages-Name-List"
+                  }
+                  onClick={() => setDisplayPackage(name)}
+                >
+                  {name}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
+
+      <div className="rightside">{showDetail(packageData, displayPackage)}</div>
     </div>
   );
 }
