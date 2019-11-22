@@ -60,8 +60,10 @@ export default function Home() {
           );
         })}
       </Items>
+
       <Contents>
         <h1>Dependencies and pre-dependencies</h1>
+
         <Dependencies>
           {getPackageDepends(displayPackage).map((dependName, index) => {
             return (
