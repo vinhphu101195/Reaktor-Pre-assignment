@@ -1,22 +1,90 @@
-.App {
-  text-align: center;
+.container{
+  height: 100%;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  grid-template-rows: 80px 1fr ;
+}
+.navbar{
+  grid-column: 1/-1;
+  /* will remove */
+  margin:0 auto;
 }
 
-.App-logo {
-  height: 40vmin;
+.navbar__input{
+  margin-top: 20px;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.navbar__input:focus{
+  outline: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+.leftside{
+  grid-column: 1/2;
+}
+.rightside{
+  grid-column: 2/-1;
+  margin-left: 30px;
+}
+
+
+
+.packages__name{
+  height: 80%;
+  width: 270px;
+  position: fixed !important;
+  z-index: 1;
+  overflow: auto;
+  padding: 1rem;
+  color:#fff;
+}
+
+.packages__name__container{
+  height: 100%;
+  width: 100%;
+  margin-top: -20px;
+}
+
+.packages-Name-List{
+  line-height: 1.5rem;
+}
+.packages-Name-List:hover{
+  cursor: pointer;
+  color:grey;
+}
+.packages-Name-List:active,
+.packages-Name-List:focus,
+.packages-Name-List:visited{
+  color:grey;
+}
+
+.depend{
+  color: #fff;
+  margin-left: 1rem;
+}
+
+.depend:hover{
+  cursor: pointer;
+  color:grey;
+}
+
+.flex{
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #09d3ac;
+.packages__information{
+  line-height: 1.5rem;
+}
+
+.description{
+  margin-top: 1rem;
+}
+
+.active{
+  background-color: grey;
+  color: black;
+}
+.active:hover{
+  cursor: default;
 }
