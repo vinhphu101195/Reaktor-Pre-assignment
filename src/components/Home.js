@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState, useRef } from "react";
+import styled, { css } from "styled-components";
 
 import usePackageData from "../hooks/usePackageData";
 
@@ -8,13 +8,13 @@ const Root = styled.div`
 `;
 
 const Items = styled.div`
-  width: 40%;
+  width: 20%;
   display: flex;
   flex-direction: column;
 `;
 
 const Contents = styled.div`
-  width: 60%;
+  width: 80%;
 `;
 
 const Dependencies = styled.div`
@@ -27,11 +27,19 @@ const Item = styled.div`
   text-decoration: underline;
   padding: 10px;
   cursor: pointer;
+
+  ${({ active }) =>
+    active &&
+    css`
+      background-color: #fff;
+      color: black;
+    `}
 `;
 
 export default function Home() {
   const { packageData, packageNames } = usePackageData();
   const [displayPackage, setDisplayPackage] = useState();
+  const itemRef = useRef();
 
   const getPackageDepends = name => {
     if (name && packageData[name]) {
@@ -54,7 +62,12 @@ export default function Home() {
       <Items>
         {packageNames.map(name => {
           return (
-            <Item onClick={() => setDisplayPackage(name)} key={name}>
+            <Item
+              ref={itemRef}
+              active={name === displayPackage}
+              onClick={() => setDisplayPackage(name)}
+              key={name}
+            >
               {name}
             </Item>
           );
@@ -62,7 +75,7 @@ export default function Home() {
       </Items>
 
       <Contents>
-        <h1>Dependencies and pre-dependencies</h1>
+        <h1>Dependencies and pre-dependencies of {displayPackage}</h1>
 
         <Dependencies>
           {getPackageDepends(displayPackage).map((dependName, index) => {
