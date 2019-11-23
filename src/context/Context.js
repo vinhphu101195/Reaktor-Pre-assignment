@@ -70,22 +70,17 @@ function convertToObject(file) {
 export default function Context(props) {
   const packageData = convertToObject(text);
   const nameList = Object.keys(packageData).sort();
+  const sortObject = {};
 
-  /*   function Onfilter(filter) {
-    console.log("dc goi");
-    if (filter) {
-      setFilterList(
-        filterList.filter(name => {
-          return name.startsWith(filter);
-        })
-      );
-
-      setNameList(filterList);
-    } else {
-      setNameList(Object.keys(packageData).sort());
+  nameList.map(item =>{
+    if(sortObject.hasOwnProperty(item[0])){
+      return sortObject[item[0]].push(item)
+    }else{
+      return sortObject[item[0]] = [item];
     }
-  }
- */
+  })
+  console.log(sortObject);
+  
 
   return (
     <dataContext.Provider value={{ nameList, packageData }}>
