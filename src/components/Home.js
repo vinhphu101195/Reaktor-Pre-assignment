@@ -27,15 +27,18 @@ function useDebounce(value, delay) {
 }
 
 export default function Home() {
-  const { nameList, packageData,onFilter } = useContext(dataContext);
+  const { nameList, packageData, onFilter } = useContext(dataContext);
   const [displayPackage, setDisplayPackage] = useState();
   const [filter, setfilter] = useState();
   const itemRef = useRef();
+  const inputRef = useRef();
 
   const debouncedSearchTerm = useDebounce(filter, 500);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
+      console.log(filter);
+      
       onFilter(filter);
     }
   }, [debouncedSearchTerm]);
@@ -59,7 +62,11 @@ export default function Home() {
 
   function showDepends(data) {
     return data.map((item, index) => {
-      if (nameList.includes(item[0])) {
+      if (
+        Object.keys(packageData)
+          .sort()
+          .includes(item[0])
+      ) {
         // 1 package
         //data [libacl1,(=,2.2.52-3build1)]
         if (item[1] !== "|") {
@@ -69,6 +76,9 @@ export default function Home() {
               className="depend"
               onClick={() => {
                 setDisplayPackage(item[0]);
+                inputRef.current.value = "";
+                setfilter();
+
               }}
             >
               {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
@@ -78,7 +88,11 @@ export default function Home() {
           // 2 packages
           // data [ubuntu-mono,|,adwaita-icon-theme-full]
           // case adwaita-icon-theme-full in list
-          if (nameList.includes(item[2])) {
+          if (
+            Object.keys(packageData)
+              .sort()
+              .includes(item[2])
+          ) {
             // there are two packages (alternative) in the list
             return (
               <div className="flex">
@@ -87,6 +101,8 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[0]);
+                    inputRef.current.value = "";
+                    setfilter();
                   }}
                 >
                   {item[0]}
@@ -97,6 +113,8 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[2]);
+                    inputRef.current.value = "";
+                    setfilter();
                   }}
                 >
                   {item[2]}
@@ -113,6 +131,8 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[0]);
+                    inputRef.current.value = "";
+                    setfilter(" ");
                   }}
                 >
                   {item[0]}
@@ -164,6 +184,7 @@ export default function Home() {
     <div className="container">
       <div className="navbar">
         <input
+          ref={inputRef}
           className="navbar__input"
           type="text"
           placeholder="input name of package"
@@ -176,22 +197,26 @@ export default function Home() {
         <div className="packages__name">
           <div className="packages__name__container">
             <h2>The Package Name</h2>
-            {nameList.map((name, index) => {
-              return (
-                <div
-                  ref={displayPackage === name ? itemRef : null}
-                  key={name}
-                  className={
-                    displayPackage === name
-                      ? "packages-Name-List active"
-                      : "packages-Name-List"
-                  }
-                  onClick={() => setDisplayPackage(name)}
-                >
-                  {name}
-                </div>
-              );
-            })}
+            {nameList.length >= 1 ? (
+              nameList.map((name, index) => {
+                return (
+                  <div
+                    ref={displayPackage === name ? itemRef : null}
+                    key={name}
+                    className={
+                      displayPackage === name
+                        ? "packages-Name-List active"
+                        : "packages-Name-List"
+                    }
+                    onClick={() => setDisplayPackage(name)}
+                  >
+                    {name}
+                  </div>
+                );
+              })
+            ) : (
+              <div>don't have package: {filter}</div>
+            )}
           </div>
         </div>
       </div>

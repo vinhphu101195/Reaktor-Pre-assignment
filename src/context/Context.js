@@ -78,9 +78,14 @@ export default function Context(props) {
   }, {});
 
   function onFilter(filter){
-    setNameList(sortObject[filter[0]].filter(element=>{
-      return(element.startsWith(filter))
-    }));
+    if(filter.length>=1){
+
+      setNameList(sortObject[filter[0]].filter(element=>{
+        return(element.startsWith(filter))
+      }));
+    }else{
+      setNameList(Object.keys(packageData).sort());
+    }
   }
   
   return (
