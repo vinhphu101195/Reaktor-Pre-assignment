@@ -27,7 +27,7 @@ function useDebounce(value, delay) {
 }
 
 export default function Home() {
-  const { nameList, packageData } = useContext(dataContext);
+  const { nameList, packageData,onFilter } = useContext(dataContext);
   const [displayPackage, setDisplayPackage] = useState();
   const [filter, setfilter] = useState();
   const itemRef = useRef();
@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      console.log(filter);
+      onFilter(filter);
     }
   }, [debouncedSearchTerm]);
 
