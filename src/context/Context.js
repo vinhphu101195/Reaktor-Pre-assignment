@@ -83,7 +83,6 @@ export default function Context(props) {
       return(element.startsWith(filter))
     }));
   }
-  console.log(nameList);
   
   return (
     <dataContext.Provider value={{ nameList, packageData,onFilter }}>
