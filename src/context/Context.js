@@ -19,23 +19,23 @@ function readTextFile(file) {
 }
 
 function convertToObject(file) {
-  // split function to object array for using.
+  // split function to JSON.
   const outputData = readTextFile(file)
     .split(/Package: /)
     .map(text => text.split(/\n/))
     .reduce((acc, val) => {
       const [name, ...restOfData] = val;
       let descriptionstring = "";
-      // slipt data from [status: install ok installed] to ["status" , "install ok installed"]
+      // slipt data from [string] to [string,string]
       const formateData = restOfData
         .map(data => {
           const newdata = data.replace(": ", "#").split("#");
           return newdata;
         })
         .reduce((accumulator, value) => {
-          // value = ["status","install ok installed"]
+          // value = [string,string]
           const [key, valueOfObject] = value;
-          // key = "status", valueOfObject= install ok installed
+          // key = string, valueOfObject= string
 
           // to get the description value
           if (key[0] === " " && key[1] !== "/") {
@@ -56,8 +56,8 @@ function convertToObject(file) {
             [key]: valueOfObject
           };
         }, {});
-      // edit the Description with full data
       formateData.Description = descriptionstring;
+
       // convert to the object with the package name is the key.
       return {
         ...acc,
@@ -78,8 +78,9 @@ export default function Context(props) {
   }, {});
 
   function onFilter(filter){
+    console.log("dc goi");
+    
     if(filter.length>=1){
-
       setNameList(sortObject[filter[0]].filter(element=>{
         return(element.startsWith(filter))
       }));

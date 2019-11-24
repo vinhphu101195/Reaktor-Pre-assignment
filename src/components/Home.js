@@ -38,10 +38,12 @@ export default function Home() {
   useEffect(() => {
     if (debouncedSearchTerm) {
       console.log(filter);
-      
+
       onFilter(filter);
     }
   }, [debouncedSearchTerm]);
+
+ 
 
   useEffect(() => {
     // scrool to the current packages
@@ -62,11 +64,7 @@ export default function Home() {
 
   function showDepends(data) {
     return data.map((item, index) => {
-      if (
-        Object.keys(packageData)
-          .sort()
-          .includes(item[0])
-      ) {
+      if (Object.keys(packageData).includes(item[0])) {
         // 1 package
         //data [libacl1,(=,2.2.52-3build1)]
         if (item[1] !== "|") {
@@ -77,8 +75,7 @@ export default function Home() {
               onClick={() => {
                 setDisplayPackage(item[0]);
                 inputRef.current.value = "";
-                setfilter();
-
+                setfilter(item[0][0]);
               }}
             >
               {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
@@ -90,8 +87,7 @@ export default function Home() {
           // case adwaita-icon-theme-full in list
           if (
             Object.keys(packageData)
-              .sort()
-              .includes(item[2])
+            .includes(item[2])
           ) {
             // there are two packages (alternative) in the list
             return (
@@ -102,7 +98,7 @@ export default function Home() {
                   onClick={() => {
                     setDisplayPackage(item[0]);
                     inputRef.current.value = "";
-                    setfilter();
+                    setfilter(item[0][0]);
                   }}
                 >
                   {item[0]}
@@ -114,7 +110,7 @@ export default function Home() {
                   onClick={() => {
                     setDisplayPackage(item[2]);
                     inputRef.current.value = "";
-                    setfilter();
+                    setfilter(item[2][0]);
                   }}
                 >
                   {item[2]}
