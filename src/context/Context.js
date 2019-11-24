@@ -78,7 +78,6 @@ export default function Context(props) {
   }, {});
 
   function onFilter(filter){
-    console.log(filter);
     setNameList(sortObject[filter[0]].filter(element=>{
       return(element.startsWith(filter))
     }));
