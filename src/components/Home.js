@@ -47,7 +47,7 @@ export default function Home() {
     return data.map((item, index) => {
       if (Object.keys(packageData).includes(item[0])) {
         // 1 package
-        //data [libacl1,(=,2.2.52-3build1)]
+        //data [string,string,string]
         if (item[1] !== "|") {
           return (
             <div
@@ -63,8 +63,8 @@ export default function Home() {
           );
         } else {
           // 2 packages
-          // data [ubuntu-mono,|,adwaita-icon-theme-full]
-          // case adwaita-icon-theme-full in list
+          // data [string,|,string]
+          // case second string in list
           if (Object.keys(packageData).includes(item[2])) {
             // there are two packages (alternative) in the list
             return (
@@ -95,7 +95,7 @@ export default function Home() {
             );
           } else {
             // alternative not in the list
-            // case adwaita-icon-theme-full not in list
+            // case second string not in list
             return (
               <div className="flex" key={index}>
                 <div
