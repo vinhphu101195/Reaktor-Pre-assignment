@@ -1,38 +1,20 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { dataContext } from "../context/Context";
-
-function useDebounce(value, delay) {
-  // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(
-    () => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-
-      // Cancel the timeout if value changes (also on delay change or unmount)
-      // This is how we prevent debounced value from updating if value is changed ...
-      // .. within the delay period. Timeout gets cleared and restarted.
-      return () => {
-        clearTimeout(handler);
-      };
-    },
-    [value, delay]
-  );
-
-  return debouncedValue;
-}
+import useDebounce from "./Debounce";
 
 export default function Home() {
   const { nameList, packageData } = useContext(dataContext);
-  const [namePackages,setNamePackages] = useState(nameList);
-  const sortObject = Object.keys(packageData).sort().reduce((acc, value) => {
-    return {
-      ...acc,
-      [value[0]]: (acc[value[0]] === undefined ? [] : acc[value[0]]).concat(value)
-    };
-  }, {});
+  const [namePackages, setNamePackages] = useState(nameList);
+  const sortObject = Object.keys(packageData)
+    .sort()
+    .reduce((acc, value) => {
+      return {
+        ...acc,
+        [value[0]]: (acc[value[0]] === undefined ? [] : acc[value[0]]).concat(
+          value
+        )
+      };
+    }, {});
   const [displayPackage, setDisplayPackage] = useState();
   const [filter, setfilter] = useState();
   const itemRef = useRef();
@@ -41,7 +23,7 @@ export default function Home() {
   const debouncedSearchTerm = useDebounce(filter, 1000);
 
   useEffect(() => {
-      onFilter(filter);
+    onFilter(filter);
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
@@ -83,10 +65,7 @@ export default function Home() {
           // 2 packages
           // data [ubuntu-mono,|,adwaita-icon-theme-full]
           // case adwaita-icon-theme-full in list
-          if (
-            Object.keys(packageData)
-            .includes(item[2])
-          ) {
+          if (Object.keys(packageData).includes(item[2])) {
             // there are two packages (alternative) in the list
             return (
               <div className="flex">
@@ -106,7 +85,7 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[2]);
-                    
+
                     setfilter();
                   }}
                 >
@@ -173,16 +152,16 @@ export default function Home() {
     }
   }
 
-  function onFilter(filter){
-    if(filter){
-      setNamePackages(sortObject[filter[0]].filter(element=>{
-        return(element.startsWith(filter))
-      }));
-    }
-    else{
+  function onFilter(filter) {
+    if (filter) {
+      setNamePackages(
+        sortObject[filter[0]].filter(element => {
+          return element.startsWith(filter);
+        })
+      );
+    } else {
       setNamePackages(Object.keys(packageData).sort());
     }
-    
   }
 
   return (
@@ -203,7 +182,7 @@ export default function Home() {
           <div className="packages__name__container">
             <h2>The Package Name</h2>
             {namePackages.length >= 1 ? (
-              namePackages.map((name) => {
+              namePackages.map(name => {
                 return (
                   <div
                     ref={displayPackage === name ? itemRef : null}
