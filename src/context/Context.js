@@ -69,28 +69,10 @@ function convertToObject(file) {
 
 export default function Context(props) {
   const packageData = convertToObject(text);
-  const [nameList,setNameList] = useState(Object.keys(packageData).sort())
-  const sortObject = Object.keys(packageData).sort().reduce((acc, value) => {
-    return {
-      ...acc,
-      [value[0]]: (acc[value[0]] === undefined ? [] : acc[value[0]]).concat(value)
-    };
-  }, {});
+  const nameList = Object.keys(packageData).sort();
 
-  function onFilter(filter){
-    console.log("dc goi");
-    
-    if(filter.length>=1){
-      setNameList(sortObject[filter[0]].filter(element=>{
-        return(element.startsWith(filter))
-      }));
-    }else{
-      setNameList(Object.keys(packageData).sort());
-    }
-  }
-  
   return (
-    <dataContext.Provider value={{ nameList, packageData,onFilter }}>
+    <dataContext.Provider value={{ nameList, packageData }}>
       {props.children}
     </dataContext.Provider>
   );

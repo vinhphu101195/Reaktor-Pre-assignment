@@ -8,7 +8,6 @@ function useDebounce(value, delay) {
 
   useEffect(
     () => {
-      // Update debounced value after delay
       const handler = setTimeout(() => {
         setDebouncedValue(value);
       }, delay);
@@ -20,27 +19,32 @@ function useDebounce(value, delay) {
         clearTimeout(handler);
       };
     },
-    [value, delay] // Only re-call effect if value or delay changes
+    [value, delay]
   );
 
   return debouncedValue;
 }
 
+
+
 export default function Home() {
-  const { nameList, packageData, onFilter } = useContext(dataContext);
+  const { nameList, packageData } = useContext(dataContext);
+  const [namePackages,setNamePackages] = useState(nameList);
+  const sortObject = Object.keys(packageData).sort().reduce((acc, value) => {
+    return {
+      ...acc,
+      [value[0]]: (acc[value[0]] === undefined ? [] : acc[value[0]]).concat(value)
+    };
+  }, {});
   const [displayPackage, setDisplayPackage] = useState();
   const [filter, setfilter] = useState();
   const itemRef = useRef();
   const inputRef = useRef();
 
-  const debouncedSearchTerm = useDebounce(filter, 500);
+  const debouncedSearchTerm = useDebounce(filter, 1000);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      console.log(filter);
-
       onFilter(filter);
-    }
   }, [debouncedSearchTerm]);
 
  
@@ -74,8 +78,7 @@ export default function Home() {
               className="depend"
               onClick={() => {
                 setDisplayPackage(item[0]);
-                inputRef.current.value = "";
-                setfilter(item[0][0]);
+                setfilter();
               }}
             >
               {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
@@ -97,8 +100,7 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[0]);
-                    inputRef.current.value = "";
-                    setfilter(item[0][0]);
+                    setfilter();
                   }}
                 >
                   {item[0]}
@@ -109,8 +111,8 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[2]);
-                    inputRef.current.value = "";
-                    setfilter(item[2][0]);
+                    
+                    setfilter();
                   }}
                 >
                   {item[2]}
@@ -128,7 +130,7 @@ export default function Home() {
                   onClick={() => {
                     setDisplayPackage(item[0]);
                     inputRef.current.value = "";
-                    setfilter(" ");
+                    setfilter();
                   }}
                 >
                   {item[0]}
@@ -176,6 +178,19 @@ export default function Home() {
     }
   }
 
+
+  function onFilter(filter){
+    if(filter){
+      setNamePackages(sortObject[filter[0]].filter(element=>{
+        return(element.startsWith(filter))
+      }));
+    }
+    else{
+      setNamePackages(Object.keys(packageData).sort());
+    }
+    
+  }
+
   return (
     <div className="container">
       <div className="navbar">
@@ -193,8 +208,8 @@ export default function Home() {
         <div className="packages__name">
           <div className="packages__name__container">
             <h2>The Package Name</h2>
-            {nameList.length >= 1 ? (
-              nameList.map((name, index) => {
+            {namePackages.length >= 1 ? (
+              namePackages.map((name) => {
                 return (
                   <div
                     ref={displayPackage === name ? itemRef : null}
