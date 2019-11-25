@@ -1,7 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { dataContext } from "../context/Context";
 
-// debounce Hook
 function useDebounce(value, delay) {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -25,8 +24,6 @@ function useDebounce(value, delay) {
   return debouncedValue;
 }
 
-
-
 export default function Home() {
   const { nameList, packageData } = useContext(dataContext);
   const [namePackages,setNamePackages] = useState(nameList);
@@ -46,8 +43,6 @@ export default function Home() {
   useEffect(() => {
       onFilter(filter);
   }, [debouncedSearchTerm]);
-
- 
 
   useEffect(() => {
     // scrool to the current packages
@@ -177,7 +172,6 @@ export default function Home() {
       );
     }
   }
-
 
   function onFilter(filter){
     if(filter){
