@@ -62,57 +62,23 @@ export default function Home() {
             </div>
           );
         } else {
-          // 2 packages
-          // data [string,|,string]
-          // case second string in list
-          if (Object.keys(packageData).includes(item[2])) {
-            // there are two packages (alternative) in the list
-            return (
-              <div className="flex">
-                <div
-                  key={index}
-                  className="depend"
-                  onClick={() => {
-                    setDisplayPackage(item[0]);
-                    setfilter();
-                  }}
-                >
-                  {item[0]}
-                </div>
-                <div> &nbsp; {item[1]} &nbsp;</div>
-                <div
-                  key={index}
-                  className="depend"
-                  onClick={() => {
-                    setDisplayPackage(item[2]);
-
-                    setfilter();
-                  }}
-                >
-                  {item[2]}
-                </div>
+          // there are alternates
+          return (
+            <div className="flex" key={index}>
+              <div
+                key={index}
+                className="depend"
+                onClick={() => {
+                  setDisplayPackage(item[0]);
+                  inputRef.current.value = "";
+                  setfilter();
+                }}
+              >
+                {item[0]}
               </div>
-            );
-          } else {
-            // alternative not in the list
-            // case second string not in list
-            return (
-              <div className="flex" key={index}>
-                <div
-                  key={index}
-                  className="depend"
-                  onClick={() => {
-                    setDisplayPackage(item[0]);
-                    inputRef.current.value = "";
-                    setfilter();
-                  }}
-                >
-                  {item[0]}
-                </div>
-                <div> &nbsp; {` ${item[1]} ${item[2]}`}</div>
-              </div>
-            );
-          }
+              <div> &nbsp; {` ${item[1]} ${item[2]}`}</div>
+            </div>
+          );
         }
       } else {
         return <div key={item[0]}> {item[0]}</div>;
