@@ -5,6 +5,7 @@ import useDebounce from "./Debounce";
 export default function Home() {
   const { nameList, packageData } = useContext(dataContext);
   const [namePackages, setNamePackages] = useState(nameList);
+  //data: {alphabet: [],alphabet:[]};
   const sortObject = Object.keys(packageData)
     .sort()
     .reduce((acc, value) => {
@@ -19,7 +20,6 @@ export default function Home() {
   const [filter, setfilter] = useState();
   const itemRef = useRef();
   const inputRef = useRef();
-
   const debouncedSearchTerm = useDebounce(filter, 1000);
 
   useEffect(() => {
