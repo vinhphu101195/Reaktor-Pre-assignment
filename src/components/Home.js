@@ -1,6 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { dataContext } from "../context/Context";
 import useDebounce from "./Debounce";
+import HomePage from "../pages/HomePage";
 
 export default function Home() {
   const { nameList, packageData } = useContext(dataContext);
@@ -51,6 +52,7 @@ export default function Home() {
                   className="depend"
                   onClick={() => {
                     setDisplayPackage(item[0]);
+                    inputRef.current.value = "";
                     setfilter();
                   }}
                 >
@@ -81,39 +83,7 @@ export default function Home() {
           }
         });
     } else {
-      return [];
-    }
-  }
-
-  function showDetail(packages, name) {
-    if (packages && name) {
-      return (
-        <div className="packages__information">
-          <h1>{name}</h1>
-          <div>Status: {packages[name].Status}</div>
-          <div>
-            Priority:{" "}
-            {packages[name].Priority ? packages[name].Priority : "n/a"}
-          </div>
-          <div>
-            Architecture:{" "}
-            {packages[name].Architecture ? packages[name].Architecture : "n/a"}
-          </div>
-          <div>
-            Source: {packages[name].Source ? packages[name].Source : "n/a"}
-          </div>
-
-          <div>
-            Depends:{" "}
-            {packages[name].Depends
-              ? showDepends(packages[name].Depends)
-              : "n/a"}
-          </div>
-          <div className="description">
-            Description: {packages[name].Description}
-          </div>
-        </div>
-      );
+      return "n/a";
     }
   }
 
@@ -130,47 +100,16 @@ export default function Home() {
   }
 
   return (
-    <div className="container">
-      <div className="navbar">
-        <input
-          ref={inputRef}
-          className="navbar__input"
-          type="text"
-          placeholder="input name of package"
-          onChange={e => {
-            setfilter(e.target.value);
-          }}
-        ></input>
-      </div>
-      <div className="leftside">
-        <div className="packages__name">
-          <div className="packages__name__container">
-            <h2>The Package Name</h2>
-            {namePackages.length >= 1 ? (
-              namePackages.map(name => {
-                return (
-                  <div
-                    ref={displayPackage === name ? itemRef : null}
-                    key={name}
-                    className={
-                      displayPackage === name
-                        ? "packages-Name-List active"
-                        : "packages-Name-List"
-                    }
-                    onClick={() => setDisplayPackage(name)}
-                  >
-                    {name}
-                  </div>
-                );
-              })
-            ) : (
-              <div>don't have package: {filter}</div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="rightside">{showDetail(packageData, displayPackage)}</div>
-    </div>
+    <HomePage
+      inputRef={inputRef}
+      setfilter={setfilter}
+      itemRef={itemRef}
+      filter={filter}
+      namePackages={namePackages}
+      setDisplayPackage={setDisplayPackage}
+      displayPackage={displayPackage}
+      detailPackage={packageData[displayPackage]}
+      detailPackageDepend={displayPackage?showDepends(packageData[displayPackage].Depends):"n/a"}
+    ></HomePage>
   );
 }
