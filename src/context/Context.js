@@ -37,11 +37,11 @@ function convertToObject(file) {
           const [key, valueOfObject] = value;
           // key = string, valueOfObject= string
 
-          // to get the description value
+          // to get the description extra value
           if (key[0] === " " && key[1] !== "/") {
-            descriptionstring = `${descriptionstring}\n${key}`;
+          descriptionstring = `${descriptionstring}\n${key}`;
           } else if (key === "Description") {
-            //get the value of Description
+            //get the value of Description field
             descriptionstring += valueOfObject;
           }
 

@@ -66,7 +66,7 @@ function showDetail(packages, name, depend) {
         <div>Source: {packages.Source ? packages.Source : "n/a"}</div>
 
         <div>Depends: {depend}</div>
-        <div className="description">Description: {packages.Description}</div>
+        <pre className="description">Description: {packages.Description}</pre>
       </div>
     );
   }

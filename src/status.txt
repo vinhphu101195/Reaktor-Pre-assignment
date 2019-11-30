@@ -38626,7 +38626,7 @@ Version: 3.28.0-1ubuntu1
 Replaces: adwaita-icon-theme-full (<< 3.28.0-1ubuntu1), gnome-themes-standard-data (<< 3.18.0-2~)
 Depends: hicolor-icon-theme, gtk-update-icon-cache, librsvg2-common, ubuntu-mono | adwaita-icon-theme-full
 Breaks: adwaita-icon-theme-full (<< 3.28.0-1ubuntu1), gnome-themes-standard-data (<< 3.18.0-2~)
-Description: default icon theme of GNOME (small subset)
+Description: default icon theme of GNOME (small subset)avahi-daemon
  This package contains the default icon theme used by the GNOME desktop.
  The icons are used in many of the official gnome applications like eog,
  evince, system monitor, and many more.
