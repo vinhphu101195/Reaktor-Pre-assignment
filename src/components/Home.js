@@ -33,57 +33,56 @@ export default function Home() {
     }
   }, [displayPackage]);
 
-  function splitDepend(depends) {
-    if (depends) {
-      const depend = depends.split(", ").map(element => {
-        return element.split(" ");
-      });
-      return depend;
-    }
-    return [];
-  }
-
   function showDepends(data) {
-    return data.map((item, index) => {
-      if (Object.keys(packageData).includes(item[0])) {
-        // 1 package
-        //data [string,string,string]
-        if (item[1] !== "|") {
-          return (
-            <div
-              key={index}
-              className="depend"
-              onClick={() => {
-                setDisplayPackage(item[0]);
-                setfilter();
-              }}
-            >
-              {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
-            </div>
-          );
-        } else {
-          // there are alternates
-          return (
-            <div className="flex" key={index}>
-              <div
-                key={index}
-                className="depend"
-                onClick={() => {
-                  setDisplayPackage(item[0]);
-                  inputRef.current.value = "";
-                  setfilter();
-                }}
-              >
-                {item[0]}
-              </div>
-              <div> &nbsp; {` ${item[1]} ${item[2]}`}</div>
-            </div>
-          );
-        }
-      } else {
-        return <div key={item[0]}> {item[0]}</div>;
-      }
-    });
+    if (data) {
+      return data
+        .split(", ")
+        .map(element => {
+          return element.split(" ");
+        })
+        .map((item, index) => {
+          if (Object.keys(packageData).includes(item[0])) {
+            // 1 package
+            //data [string,string,string]
+            if (item[1] !== "|") {
+              return (
+                <div
+                  key={index}
+                  className="depend"
+                  onClick={() => {
+                    setDisplayPackage(item[0]);
+                    setfilter();
+                  }}
+                >
+                  {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
+                </div>
+              );
+            } else {
+              // there are alternates
+              return (
+                <div className="flex" key={index}>
+                  <div
+                    key={index}
+                    className="depend"
+                    onClick={() => {
+                      setDisplayPackage(item[0]);
+                      inputRef.current.value = "";
+                      setfilter();
+                    }}
+                  >
+                    {item[0]}
+                  </div>
+                  <div> &nbsp; {` ${item[1]} ${item[2]}`}</div>
+                </div>
+              );
+            }
+          } else {
+            return <div key={item[0]}> {item[0]}</div>;
+          }
+        });
+    } else {
+      return [];
+    }
   }
 
   function showDetail(packages, name) {
@@ -107,7 +106,7 @@ export default function Home() {
           <div>
             Depends:{" "}
             {packages[name].Depends
-              ? showDepends(splitDepend(packages[name].Depends))
+              ? showDepends(packages[name].Depends)
               : "n/a"}
           </div>
           <div className="description">
