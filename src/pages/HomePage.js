@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function HomePage(props) {
+  useEffect(() => {
+    // scrool to the current packages
+    if (props.itemRef.current) {
+      props.itemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  }, [props.displayPackage]);
+
   return (
     <div className="container">
       <div className="navbar">

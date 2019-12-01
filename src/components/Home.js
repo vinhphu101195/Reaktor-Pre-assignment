@@ -21,18 +21,12 @@ export default function Home() {
   const [filter, setfilter] = useState();
   const itemRef = useRef();
   const inputRef = useRef();
-  const debouncedSearchTerm = useDebounce(filter, 1000);
+  const debouncedSearchTerm = useDebounce(filter, 500);
 
   useEffect(() => {
     onFilter(filter);
   }, [debouncedSearchTerm]);
 
-  useEffect(() => {
-    // scrool to the current packages
-    if (itemRef.current) {
-      itemRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [displayPackage]);
 
   function showDepends(data) {
     if (data) {
@@ -102,8 +96,8 @@ export default function Home() {
   return (
     <HomePage
       inputRef={inputRef}
-      setfilter={setfilter}
       itemRef={itemRef}
+      setfilter={setfilter}    
       filter={filter}
       namePackages={namePackages}
       setDisplayPackage={setDisplayPackage}
