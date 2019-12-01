@@ -27,7 +27,6 @@ export default function Home() {
     onFilter(filter);
   }, [debouncedSearchTerm]);
 
-
   function showDepends(data) {
     if (data) {
       return data
@@ -97,13 +96,17 @@ export default function Home() {
     <HomePage
       inputRef={inputRef}
       itemRef={itemRef}
-      setfilter={setfilter}    
+      setfilter={setfilter}
       filter={filter}
       namePackages={namePackages}
       setDisplayPackage={setDisplayPackage}
       displayPackage={displayPackage}
       detailPackage={packageData[displayPackage]}
-      detailPackageDepend={displayPackage?showDepends(packageData[displayPackage].Depends):"n/a"}
+      detailPackageDepend={
+        displayPackage
+          ? showDepends(packageData[displayPackage].Depends)
+          : "n/a"
+      }
     ></HomePage>
   );
 }
