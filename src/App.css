@@ -63,10 +63,11 @@
   margin-left: 1rem;
 }
 
-.depend:hover{
+.depend:hover,.reverseDepen:hover{
   cursor: pointer;
   color:grey;
 }
+
 
 .flex{
   display: flex;

@@ -12,7 +12,54 @@ export default function HomePage(props) {
   }, [props.displayPackage]);
 
   console.log(props.detailPackage);
-  
+
+  function showDetail(packages, name, depend) {
+    if (packages && name) {
+      return (
+        <div className="packages__information">
+          <h1>{name}</h1>
+          <div>Status: {packages.Status}</div>
+          <div>Priority: {packages.Priority ? packages.Priority : "n/a"}</div>
+          <div>
+            Architecture:{" "}
+            {packages.Architecture ? (
+              <span
+                className="reverseDepen"
+                onClick={() => {
+                  props.setfilter(packages.Architecture);
+                  props.inputRef.current.value = packages.Architecture;
+                }}
+              >
+                {packages.Architecture}
+              </span>
+            ) : (
+              "n/a"
+            )}
+          </div>
+          <div>
+            Source:{" "}
+            {packages.Source ? (
+              <span
+                className="reverseDepen"
+                onClick={() => {
+                  props.setfilter(packages.Source);
+                  props.inputRef.current.value = packages.Source;
+                }}
+              >
+                {packages.Source}
+              </span>
+            ) : (
+              "n/a"
+            )}
+          </div>
+
+          <div>Depends: {depend}</div>
+          <pre className="description">Description: {packages.Description}</pre>
+        </div>
+      );
+    }
+  }
+
   return (
     <div className="container">
       <div className="navbar">
@@ -63,23 +110,4 @@ export default function HomePage(props) {
       </div>
     </div>
   );
-}
-
-function showDetail(packages, name, depend) {
-  if (packages && name) {
-    return (
-      <div className="packages__information">
-        <h1>{name}</h1>
-        <div>Status: {packages.Status}</div>
-        <div>Priority: {packages.Priority ? packages.Priority : "n/a"}</div>
-        <div>
-          Architecture: {packages.Architecture ? packages.Architecture : "n/a"}
-        </div>
-        <div>Source: {packages.Source ? packages.Source : "n/a"}</div>
-
-        <div>Depends: {depend}</div>
-        <pre className="description">Description: {packages.Description}</pre>
-      </div>
-    );
-  }
 }
