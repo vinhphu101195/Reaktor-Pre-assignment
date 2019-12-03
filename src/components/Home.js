@@ -49,7 +49,7 @@ export default function Home() {
                     setfilter();
                   }}
                 >
-                  {`${item[0]} ${item[1] ? `${item[1]} ${item[2]}` : ""}`}
+                  { `${item.join(" ")}`}
                 </div>
               );
             } else {
@@ -68,6 +68,7 @@ export default function Home() {
                     {item[0]}
                   </div>
                   <div> &nbsp; {` ${item[1]} ${item[2]}`}</div>
+                  
                 </div>
               );
             }
