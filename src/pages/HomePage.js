@@ -11,6 +11,8 @@ export default function HomePage(props) {
     }
   }, [props.displayPackage]);
 
+  console.log(props.detailPackage);
+  
   return (
     <div className="container">
       <div className="navbar">
