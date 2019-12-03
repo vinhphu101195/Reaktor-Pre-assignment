@@ -7,25 +7,35 @@ const Root = styled.div`
   display: flex;
 `;
 
+const Input = styled.input`
+  height: 20px;
+  padding: 8px;
+  margin: 10px;
+`;
+
 const Items = styled.div`
-  width: 20%;
+  width: 40%;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: scroll;
 `;
 
 const Contents = styled.div`
-  width: 80%;
-`;
-
-const Dependencies = styled.div`
-  display: flex;
-  flex-direction: column;
+  padding-left: 40px;
+  width: 100%;
+  height: 100vh;
+  overflow: scroll;
 `;
 
 const Item = styled.div`
   color: #fff;
+  padding-top: 8px;
+`;
+
+const Link = styled(Item)`
+  padding: 8px;
   text-decoration: underline;
-  padding: 10px;
   cursor: pointer;
 
   ${({ active }) =>
@@ -36,22 +46,61 @@ const Item = styled.div`
     `}
 `;
 
+const SmallLink = styled(Item)`
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px;
+`;
+
+const RichText = styled.div`
+  padding-left: 16px;
+  white-space: pre-line;
+`;
+
+const Text = styled.div`
+  margin-top: 2px;
+  padding-left: 16px;
+  white-space: pre-line;
+`;
+
+const Field = styled.div`
+  font-weight: 700;
+`;
+
 export default function Home() {
+  const [search, setSearch] = useState("");
   const { packageData, packageNames } = usePackageData();
   const [displayPackage, setDisplayPackage] = useState();
   const itemRef = useRef();
 
-  const getPackageDepends = name => {
-    if (name && packageData[name]) {
-      const dependencies = (packageData[name].Depends || "")
-        .split(/[,|\s]/)
-        .filter(name => !!packageData[name]);
+  const getPackageName = nameWithVersion => {
+    return nameWithVersion.split(" ")[0];
+  };
 
-      const predependencies = (packageData[name]["Pre-Depends"] || "")
-        .split(/[,|\s]/)
-        .filter(name => !!packageData[name]);
+  const getPackagePreDepends = () => {
+    if (displayPackage && packageData[displayPackage]) {
+      const preDependenciesContent =
+        packageData[displayPackage].find(
+          ([field]) => field === "Pre-Depends"
+        ) || [];
 
-      return [...dependencies, predependencies];
+      return (preDependenciesContent[1] || "")
+        .split(/[,||]/)
+        .map(depend => depend.trim());
+    }
+
+    return [];
+  };
+
+  const getPackageDepends = () => {
+    if (displayPackage && packageData[displayPackage]) {
+      const dependenciesContent =
+        packageData[displayPackage].find(([field]) => field === "Depends") ||
+        [];
+
+      return (dependenciesContent[1] || "")
+        .split(/[,||]/)
+        .map(depend => depend.trim());
     }
 
     return [];
@@ -60,32 +109,86 @@ export default function Home() {
   return (
     <Root>
       <Items>
-        {packageNames.map(name => {
-          return (
-            <Item
+        <Input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search"
+        />
+
+        {packageNames
+          .filter(name => name.includes(search))
+          .map(name => (
+            <Link
               ref={itemRef}
               active={name === displayPackage}
               onClick={() => setDisplayPackage(name)}
               key={name}
             >
               {name}
-            </Item>
-          );
-        })}
+            </Link>
+          ))}
       </Items>
 
       <Contents>
-        <h1>Dependencies and pre-dependencies of {displayPackage}</h1>
+        {displayPackage && (
+          <>
+            <Item>
+              <Field>Package :</Field>
+              <RichText>{displayPackage}</RichText>
+            </Item>
 
-        <Dependencies>
-          {getPackageDepends(displayPackage).map((dependName, index) => {
-            return (
-              <Item key={index} onClick={() => setDisplayPackage(dependName)}>
-                {dependName}
-              </Item>
-            );
-          })}
-        </Dependencies>
+            {packageData[displayPackage].map(([field, content], index) => {
+              if (!field) {
+                return <Text key={index}>{content} </Text>;
+              }
+
+              if (field === "Pre-Depends")
+                return (
+                  <Item key={index}>
+                    <Field>{field} :</Field>
+                    <RichText>
+                      {getPackagePreDepends().map((depend, index) => (
+                        <SmallLink
+                          onClick={() => {
+                            setDisplayPackage(getPackageName(depend));
+                          }}
+                          key={index}
+                        >
+                          {depend}
+                        </SmallLink>
+                      ))}
+                    </RichText>
+                  </Item>
+                );
+
+              if (field === "Depends")
+                return (
+                  <Item key={index}>
+                    <Field>{field} :</Field>
+                    <RichText>
+                      {getPackageDepends().map((depend, index) => (
+                        <SmallLink
+                          onClick={() => {
+                            setDisplayPackage(getPackageName(depend));
+                          }}
+                          key={index}
+                        >
+                          {depend}
+                        </SmallLink>
+                      ))}
+                    </RichText>
+                  </Item>
+                );
+
+              return (
+                <Item key={index}>
+                  <Field>{field} :</Field>
+                  <RichText>{content}</RichText>
+                </Item>
+              );
+            })}
+          </>
+        )}
       </Contents>
     </Root>
   );
