@@ -37,8 +37,7 @@ export default function Home() {
         })
         .map((item, index) => {
           if (Object.keys(packageData).includes(item[0])) {
-            // 1 package
-            //data [string,string,string]
+            // 1 package don't have alternates
             if (item[1] !== "|") {
               return (
                 <div
