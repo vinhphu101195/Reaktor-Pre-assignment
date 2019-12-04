@@ -49,7 +49,7 @@ export default function Home() {
                     setfilter();
                   }}
                 >
-                  { `${item.join(" ")}`}
+                  {`${item.join(" ")}`}
                 </div>
               );
             } else {
@@ -67,13 +67,30 @@ export default function Home() {
                   >
                     {item[0]}
                   </div>
-                  <div> &nbsp; {` ${item[1]} ${item[2]}`}</div>
-                  
+                  <div>                   
+                    &nbsp; {item[1]}  &nbsp;
+                    {/* check the list includes alternates */} 
+                    {Object.keys(packageData).includes(item[2]) ? (
+                      <span
+                        key={index}
+                        className="depend"
+                        onClick={() => {
+                          setDisplayPackage(item[2]);
+                          inputRef.current.value = "";
+                          setfilter();
+                        }}
+                      >
+                        {item[2]}
+                      </span>
+                    ) : (
+                      item[2]
+                    )}
+                  </div>
                 </div>
               );
             }
           } else {
-            return <div key={item[0]}> {item[0]}</div>;
+            return <div key={item[0]}> {item}</div>;
           }
         });
     } else {
