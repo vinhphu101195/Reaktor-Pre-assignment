@@ -28,6 +28,7 @@ export default function Home() {
   }, [debouncedSearchTerm]);
 
   function showDepends(data) {
+    // to check the depends is in the packages list
     if (data) {
       return data
         .split(", ")
